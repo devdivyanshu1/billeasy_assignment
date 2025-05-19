@@ -1,117 +1,60 @@
-# Billeasy Assignment Backend API
+## Billeasy Assignment Backend API
+Overview
+This is a backend API built with Node.js, Express, MongoDB, and JWT for user authentication and management.
 
-## Overview  
-Backend API built with Node.js, Express, JWT authentication, and MongoDB for user management.
+Setup
+Clone the repository.
 
----
+Install dependencies with npm install.
 
-## Setup Instructions
-
-1. Clone the repo:  
+Run the server:
 
 
-Server will run at `http://localhost:3000`
+npm start
+The server will be running at http://localhost:3000.
 
----
+API Endpoints
+Endpoint	Method	Description	Auth Required
+/api/register	POST	Register a new user	No
+/api/login	POST	Login and get auth token	No
+/api/profile	GET	Get user profile info	Yes
+/api/profile	PUT	Update user profile	Yes
+/api/logout	POST	Logout user	Yes
 
-## API Endpoints
+How to Use the API
+Register: Send a POST request to /api/register with JSON body like:
 
-| Endpoint        | Method | Description                  | Auth Required |
-|-----------------|--------|------------------------------|--------------|
-| `/api/register` | POST   | Register new user            | No           |
-| `/api/login`    | POST   | Login user, returns JWT cookie | No         |
-| `/api/profile`  | GET    | Get logged-in user profile   | Yes          |
-
----
-
-## Request Body Example (Register / Login)
-
-```json
+json
+Copy
+Edit
 {
-  "name": "John Doe",        // name needed only for register
+  "name": "John Doe",
   "email": "john@example.com",
   "password": "password123"
 }
+Login: POST to /api/login with email and password. The API sends back a JWT token stored in an HTTP-only cookie.
 
-Authentication Details
-JWT token is signed with SECRET_KEY from .env and stored as an HTTP-only cookie named token.
+Profile: Use the /api/profile endpoint to GET or PUT your profile info. Make sure your request includes the cookie with the JWT token.
 
-Protected routes require this token.
+Logout: POST to /api/logout to clear the authentication token.
 
-Middleware verifies token and sets req.id with the user ID from the token.
+Authentication
+Passwords are securely hashed.
 
+JWT tokens are signed and stored as HTTP-only cookies named token.
+
+Protected routes verify the token and identify the user via req.id.
+
+Project Structure
+bash
+Copy
+Edit
 billeasy_assignment/
-├── controllers/    # Route logic
-├── middlewares/    # Authentication middleware
-├── models/         # Mongoose schemas
+├── controllers/    # Route handlers
+├── middlewares/    # Auth middleware
+├── models/         # Database schemas
 ├── routes/         # API routes
-├── .env            # Environment variables (not committed)
+├── .env            # Environment variables (not shared)
 ├── index.js        # Server entry point
 ├── package.json    # Project config and dependencies
 └── README.md       # This file
-Server runs at `http://localhost:5000`
-
----
-
-## 3. RESTful APIs
-
-### 3.1 Register User  
-- **POST** `http://localhost:5000/api/register`  
-- Body: `{ "name": "John", "email": "john@example.com", "password": "password123" }`  
-- Description: Create new user account.
-
-### 3.2 Login User  
-- **POST** `http://localhost:5000/api/login`  
-- Body: `{ "email": "john@example.com", "password": "password123" }`  
-- Description: Authenticate user, returns JWT token in cookie.
-
-### 3.3 Get User Profile  
-- **GET** `http://localhost:5000/api/profile`  
-- Headers: Cookie with JWT token required  
-- Description: Get logged-in user profile info.
-
-### 3.4 Update User Profile  
-- **PUT** `http://localhost:5000/api/profile`  
-- Headers: Cookie with JWT token required  
-- Body: `{ "name": "John Updated" }` (example)  
-- Description: Update logged-in user details.
-
-### 3.5 Logout User  
-- **POST** `http://localhost:5000/api/logout`  
-- Description: Clear authentication token cookie to logout.
-
----
-
-## 4. How to Use in Postman
-
-1. **Register:** POST `/api/register` with JSON body.  
-2. **Login:** POST `/api/login` with JSON body. Postman saves cookie.  
-3. **Get Profile:** GET `/api/profile` (cookie sent automatically).  
-4. **Update Profile:** PUT `/api/profile` with JSON body (cookie needed).  
-5. **Logout:** POST `/api/logout`.
-
----
-
-## 5. Database Schema (Users)
-
-| Field    | Type     | Description          |
-|----------|----------|----------------------|
-| _id      | ObjectId | MongoDB unique ID    |
-| name     | String   | User full name       |
-| email    | String   | Unique email         |
-| password | String   | Hashed password      |
-| createdAt| Date     | Account creation time|
-
----
-
-## 6. Notes
-
-- Passwords are hashed.  
-- JWT stored in HTTP-only cookie `token`.  
-- Auth middleware validates JWT, sets `req.id` for user id.  
-- Environment variables store secrets securely.
-
----
-
-
-
